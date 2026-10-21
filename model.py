@@ -64,8 +64,7 @@ def decode_ids(ids, itos):
     # TODO: map each id through decode_int and join the characters into one string.
     char_ids = []
     for i in ids:
-        if i in itos:
-            char_ids.append(decode_int(i, itos))
+        char_ids.append(decode_int(i, itos))
     return "".join(char_ids)
     pass
 
