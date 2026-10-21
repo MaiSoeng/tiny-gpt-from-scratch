@@ -45,8 +45,7 @@ def encode_string(text, stoi):
     # TODO: map each char in text through stoi (via encode_char) into a list of ids
     token_ids = []
     for char in text:
-        if char in stoi:
-            token_ids.append(encode_char(char, stoi))
+        token_ids.append(encode_char(char, stoi))
     return token_ids
     pass
 
