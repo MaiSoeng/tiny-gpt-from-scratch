@@ -610,8 +610,15 @@ def logits_to_probs_rowwise(logits):
     return stable_softmax_2d_rowwise(logits)
     pass
 
-# Step 64 - gather_correct_token_probs (not yet solved)
-# TODO: implement
+# Step 64 - gather_correct_token_probs
+def gather_correct_token_probs(probs, targets):
+    """Return probs[i, targets[i]] for each i, shape (B,)."""
+    # TODO: pick out the probability assigned to the correct next token for each batch row
+    token_probs = []
+    for i in range(len(targets)):
+        token_probs.append(probs[i, targets[i]])
+    return np.array(token_probs)
+    pass
 
 # Step 65 - cross_entropy_loss (not yet solved)
 # TODO: implement
