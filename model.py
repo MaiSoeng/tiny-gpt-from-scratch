@@ -573,11 +573,29 @@ def one_hot_encode_batch(ids, vocab_size):
     return matrix
     pass
 
-# Step 60 - forward_logits_onehot (not yet solved)
-# TODO: implement
+# Step 60 - forward_logits_onehot
+def forward_logits_onehot(onehot, w_matrix):
+    # TODO: compute logits for the neural bigram model as the matrix product of one-hot inputs and W.
+    return matmul(onehot, w_matrix)
+    pass
 
-# Step 61 - observe_lookup_equivalence (not yet solved)
-# TODO: implement
+# Step 61 - observe_lookup_equivalence
+import numpy as np
+
+def observe_lookup_equivalence(w, ids):
+    """Show that one-hot @ W equals W[ids] for a small example.
+    Returns a dict with keys 'onehot_result' and 'index_result'.
+    """
+    # TODO: compute logits two ways and return both in a dict
+    one_hot = one_hot_encode_batch(ids, w.shape[0])
+    result_logits1 = one_hot @ w
+    result_logits2 = w[ids]
+    
+    return {
+        'onehot_result': result_logits1,
+        'index_result': result_logits2
+    }
+    pass
 
 # Step 62 - forward_logits_lookup (not yet solved)
 # TODO: implement
