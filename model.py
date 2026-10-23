@@ -497,7 +497,7 @@ def generate_sequence(p_matrix, start_id, length, rng):
     sequence = [start_id]
 
     for _ in range(length - 1):
-        current_id = sequence[-1]
+        current_id = sequence[-1] # get the last id from the sequence
         next_id = sample_next_token(p_matrix, current_id, rng)
         sequence.append(next_id)
     
