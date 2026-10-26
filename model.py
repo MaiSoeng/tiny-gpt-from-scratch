@@ -682,8 +682,18 @@ def sgd_update_w(w, dw, learning_rate):
     return w - learning_rate * dw
     pass
 
-# Step 71 - run_one_training_step (not yet solved)
-# TODO: implement
+# Step 71 - run_one_training_step
+def run_one_training_step(w, ids, targets, learning_rate):
+    """Run forward, loss, backward, and SGD update once. Return {'w': new_w, 'loss': float}."""
+    # TODO: chain the upstream forward/loss/backward/update helpers into one step
+    logits = forward_logits_lookup(w, ids)
+    probs = logits_to_probs_rowwise(logits)
+    entropy_loss = cross_entropy_loss(probs, targets)
+    dlogits = compute_dlogits(probs, targets)
+    dW = compute_dw_scatter_add(ids, dlogits, dlogits.shape[1])
+    new_w = sgd_update_w(w, dW, learning_rate)
+    return {'w': new_w, 'loss': entropy_loss}
+    pass
 
 # Step 72 - train_neural_bigram_loop (not yet solved)
 # TODO: implement
