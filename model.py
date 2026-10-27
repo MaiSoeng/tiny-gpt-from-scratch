@@ -781,8 +781,16 @@ def derive_linear_dw_on_paper():
     )
     pass
 
-# Step 77 - linear_backward_dx (not yet solved)
-# TODO: implement
+# Step 77 - linear_backward_dx
+def linear_backward_dx(dy, cache):
+    # TODO: compute the gradient of the loss w.r.t. the linear layer input X given dy and cache
+    x = cache['x']
+    w = cache['w']
+    y = matmul(x, w)
+    wT = transpose_matrix(w)
+    dx = matmul(dy, wT)
+    return dx
+    pass
 
 # Step 78 - linear_backward_dw (not yet solved)
 # TODO: implement
