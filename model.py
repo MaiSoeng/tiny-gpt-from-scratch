@@ -766,8 +766,20 @@ def derive_dx_on_paper():
     
     pass
 
-# Step 76 - derive_linear_dw_on_paper (not yet solved)
-# TODO: implement
+# Step 76 - derive_linear_dw_on_paper
+def derive_linear_dw_on_paper():
+    """Return a string with the derivation of dL/dW for Y = X @ W."""
+    # TODO: return notes that include the final identity dL/dW = X.T @ dY
+    return (
+        "Forward: Y = X @ W.\n"
+        "Shapes: X (N, D_in), W (D_in, D_out), Y (N, D_out).\n"
+        "Let dY = dL/dY be the upstream gradient.\n"
+        "Elementwise: Y[n, j] = sum_k X[n, k] * W[k, j].\n"
+        "By the chain rule: dL/dW[k, j] = sum_n X[n, k] * dY[n, j].\n"
+        "Therefore, dL/dW = X.T @ dY.\n"
+        "Shape check: (D_in, N) @ (N, D_out) = (D_in, D_out), matching W."
+    )
+    pass
 
 # Step 77 - linear_backward_dx (not yet solved)
 # TODO: implement
