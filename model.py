@@ -1056,8 +1056,14 @@ def create_qkv_projections(d_model, d_head, scale=0.02):
     }
     pass
 
-# Step 100 - compute_query (not yet solved)
-# TODO: implement
+# Step 100 - compute_query
+import numpy as np
+
+def compute_query(x, w_q):
+    """Project x (B, T, d_model) into queries Q (B, T, d_head) using w_q."""
+    # TODO: project x into the query space using w_q
+    return matmul(x, w_q)
+    pass
 
 # Step 101 - compute_key (not yet solved)
 # TODO: implement
