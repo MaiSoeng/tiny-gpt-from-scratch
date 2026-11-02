@@ -1078,8 +1078,15 @@ def compute_value(x, w_v):
     return matmul(x, w_v)
     pass
 
-# Step 103 - compute_attention_scores (not yet solved)
-# TODO: implement
+# Step 103 - compute_attention_scores
+import numpy as np
+
+def compute_attention_scores(q, k):
+    """Return raw attention scores Q @ K^T with shape (B, T, T)."""
+    # TODO: compute raw attention scores Q @ K^T per batch element
+    k_reshape = np.swapaxes(k, -1, 1)
+    return matmul(q, k_reshape)
+    pass
 
 # Step 104 - scale_attention_scores (not yet solved)
 # TODO: implement
