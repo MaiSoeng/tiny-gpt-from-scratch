@@ -309,9 +309,9 @@ import numpy as np
 def stable_softmax_2d_rowwise(logits):
     """Row-wise numerically stable softmax of a 2D logits array."""
     # TODO: turn each row of logits into a probability distribution without overflowing
-    trans_logits = logits - max_along_axis(logits, axis = 1).reshape(-1, 1)
+    trans_logits = logits - max_along_axis(logits, axis = -1).reshape(-1, 1)
     exp_logits = array_exp(trans_logits)
-    sum_logits = sum_keepdims(exp_logits, axis = 1)
+    sum_logits = sum_keepdims(exp_logits, axis = -1)
     return exp_logits / sum_logits
     pass
 
@@ -1116,8 +1116,14 @@ def apply_causal_mask(scaled_scores, causal_mask):
     return np.where(causal_mask, scaled_scores, -np.inf)
     pass
 
-# Step 107 - softmax_attention_weights (not yet solved)
-# TODO: implement
+# Step 107 - softmax_attention_weights
+import numpy as np
+
+def softmax_attention_weights(masked_scores):
+    """Row-wise stable softmax over the last axis of (B, T, T) scores."""
+    # TODO: apply numerically stable softmax along the last axis of masked_scores
+    return stable_softmax_2d_rowwise(masked_scores)
+    pass
 
 # Step 108 - attention_weighted_values (not yet solved)
 # TODO: implement
