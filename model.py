@@ -1342,8 +1342,15 @@ def get_multihead_n_heads(config):
     return config['n_heads']
     pass
 
-# Step 122 - get_multihead_sequence_length (not yet solved)
-# TODO: implement
+# Step 122 - get_multihead_sequence_length
+import numpy as np
+
+def get_multihead_sequence_length(x):
+    """Return T from x of shape (B, T, d_model)."""
+    # TODO: return the sequence length T from the (B, T, d_model) tensor.
+    shape = get_array_shape(x)
+    return shape[1]
+    pass
 
 # Step 123 - compute_d_head (not yet solved)
 # TODO: implement
