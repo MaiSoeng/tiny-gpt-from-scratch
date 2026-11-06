@@ -1352,8 +1352,12 @@ def get_multihead_sequence_length(x):
     return shape[1]
     pass
 
-# Step 123 - compute_d_head (not yet solved)
-# TODO: implement
+# Step 123 - compute_d_head
+def compute_d_head(d_model, n_heads):
+    # TODO: return the per-head dimension d_head for multi-head attention.
+    config = choose_attention_head_config(d_model, n_heads)
+    return config['d_head']
+    pass
 
 # Step 124 - multihead_masked_softmax_scores (not yet solved)
 # TODO: implement
