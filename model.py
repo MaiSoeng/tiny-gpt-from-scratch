@@ -1336,8 +1336,11 @@ def transpose_heads_to_front(x_heads):
     return np.swapaxes(x_heads, 1, 2)
     pass
 
-# Step 121 - get_multihead_n_heads (not yet solved)
-# TODO: implement
+# Step 121 - get_multihead_n_heads
+def get_multihead_n_heads(config):
+    # TODO: return the number of attention heads stored in the multi-head config dict.
+    return config['n_heads']
+    pass
 
 # Step 122 - get_multihead_sequence_length (not yet solved)
 # TODO: implement
