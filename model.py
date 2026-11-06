@@ -1307,8 +1307,13 @@ def create_multihead_qkv_projections(d_model, scale=0.02):
 
     pass
 
-# Step 118 - create_multihead_output_projection (not yet solved)
-# TODO: implement
+# Step 118 - create_multihead_output_projection
+def create_multihead_output_projection(d_model, scale=0.02):
+    """Initialize Wo of shape (d_model, d_model) for multi-head attention output projection."""
+    # TODO: build a (d_model, d_model) random matrix and scale it down by `scale`.
+    Wo_ori = make_2d_random(d_model, d_model, 0)
+    return scale_w_small(Wo_ori, scale)
+    pass
 
 # Step 119 - reshape_to_heads (not yet solved)
 # TODO: implement
