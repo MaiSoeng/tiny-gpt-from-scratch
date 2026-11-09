@@ -1392,8 +1392,13 @@ def transpose_heads_to_back(x_heads):
     return np.swapaxes(x_heads, -2, -3)
     pass
 
-# Step 127 - get_multihead_output_sequence_length (not yet solved)
-# TODO: implement
+# Step 127 - get_multihead_output_sequence_length
+def get_multihead_output_sequence_length(x_heads_back):
+    """Return T from a (B, T, n_heads, d_head) tensor."""
+    # TODO: read the sequence-length dimension from x_heads_back's shape
+    shape = get_array_shape(x_heads_back)
+    return shape[1]
+    pass
 
 # Step 128 - merge_heads_to_d_model (not yet solved)
 # TODO: implement
