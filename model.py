@@ -1487,8 +1487,46 @@ def ffn_linear_two_forward(a1, w2, b2):
     }
     pass
 
-# Step 134 - ffn_backward (not yet solved)
-# TODO: implement
+# Step 134 - ffn_backward
+def ffn_backward(d_out, cache):
+    """Backprop through linear2 -> ReLU -> linear1 of the FFN.
+
+    cache keys: 'x', 'w1', 'h1', 'a1', 'w2'.
+    Returns dict with keys: 'dx', 'dw1', 'db1', 'dw2', 'db2'.
+    """
+    # TODO: route d_out back through linear2, ReLU, and linear1 to get input and param grads
+    # get parameters from cache keys
+    x = cache['x']
+    w1 = cache['w1']
+    w2 = cache['w2']
+    a1 = cache['a1']
+    h1 = cache['h1']
+
+    # flat the matrices
+    a1_flat = a1.reshape(-1, a1.shape[-1])
+    x_flat = x.reshape(-1, x.shape[-1])
+    dout_flat = d_out.reshape(-1, d_out.shape[-1])
+
+    # calculate the second linear layer
+    linear2_cache = {'x': a1_flat, 'w': w2}
+    da1 = linear_backward_dx(dout_flat, linear2_cache)
+    dw2 = linear_backward_dw(dout_flat, linear2_cache)
+    db2 = bias_add_backward_db(dout_flat, {})
+
+    # calculate the activation layer
+    h1_flat = h1.reshape(a1_flat.shape)
+    dh1 = relu_backward(da1, {'x': h1_flat})
+
+    # calculate the first layer
+    linear1_cache = {'x': x_flat, 'w': w1}
+    dx = linear_backward_dx(dh1, linear1_cache)
+    dw1 = linear_backward_dw(dh1, linear1_cache)
+    db1 = bias_add_backward_db(dh1, {})
+
+    return {
+        'dx': dx.reshape(x.shape), 'dw1': dw1, 'db1': db1, 'dw2': dw2, 'db2': db2
+    } 
+    pass
 
 # Step 135 - residual_forward (not yet solved)
 # TODO: implement
