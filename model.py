@@ -1551,8 +1551,14 @@ def pre_layernorm_sublayer_forward(x, ln_params, sublayer_fn, sublayer_params):
     eps = 1e-5
 
     layernorm_forward = layernorm_forward_affine(x, gamma, beta, eps)
-    sublayer = residual_forward(layernorm_forward, sublayer_fn)
-    return layernorm_forward
+    sublayer_result = sublayer_fn(layernorm_forward['y'], sublayer_params)
+    y = residual_forward(x, sublayer_result['y'])
+    return {
+        'y': y,
+        'cache': {'ln_cache': layernorm_forward['cache'], 
+        'sublayer_cache': sublayer_result['cache'],
+        'x': x}
+    }
     pass
 
 # Step 138 - transformer_block_forward (not yet solved)
