@@ -1532,7 +1532,7 @@ def ffn_backward(d_out, cache):
 def residual_forward(x, sublayer_out):
     """Return x + sublayer_out for a residual connection."""
     # TODO: add the sublayer output to its input to form a residual connection.
-    return x + s
+    return x + sublayer_out
     pass
 
 # Step 136 - residual_backward
@@ -1542,8 +1542,18 @@ def residual_backward(d_y):
     return d_y.copy(), d_y.copy()
     pass
 
-# Step 137 - pre_layernorm_sublayer_forward (not yet solved)
-# TODO: implement
+# Step 137 - pre_layernorm_sublayer_forward
+def pre_layernorm_sublayer_forward(x, ln_params, sublayer_fn, sublayer_params):
+    # TODO: apply LayerNorm to x, run sublayer_fn on the result, then residual-add back to x.
+    # get layernorm parameters
+    gamma = ln_params['gamma']
+    beta = ln_params['beta']
+    eps = 1e-5
+
+    layernorm_forward = layernorm_forward_affine(x, gamma, beta, eps)
+    sublayer = residual_forward(layernorm_forward, sublayer_fn)
+    return layernorm_forward
+    pass
 
 # Step 138 - transformer_block_forward (not yet solved)
 # TODO: implement
