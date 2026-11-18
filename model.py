@@ -1663,8 +1663,45 @@ def transformer_block_forward(x, block_params):
     }
     pass
 
-# Step 139 - transformer_block_backward (not yet solved)
-# TODO: implement
+# Step 139 - transformer_block_backward
+def transformer_block_backward(d_y, cache, block_params):
+    """Backward pass for a pre-LN Transformer block.
+
+    Args:
+        d_y: upstream gradient w.r.t. block output, shape (B, T, D).
+        cache: dict from transformer_block_forward, with keys 'attn_branch' and 'ffn_branch'.
+        block_params: nested dict with keys 'ln1', 'attn', 'ln2', 'ffn'.
+
+    Returns:
+        (d_x, grads) where d_x has shape (B, T, D) and grads is a nested dict
+        with keys 'ln1', 'ln2', 'attn', 'ffn' mirroring block_params.
+    """
+    # Tip: recover x from cache['attn_branch']['x'] and call _complete_block_cache(x, block_params)
+    # to guarantee every field the backward helpers need is present, no matter what the forward saved.
+    # TODO: reverse the FFN branch then the attention branch, summing residual + sublayer gradients
+    
+    # get parameters and branches from previous steps 
+    x = cache['attn_branch']['x']
+    block_cache = _complete_block_cache(x, block_params)
+
+    # do the ffn backward process
+    d_ln2, ffn_grads = _ffn_sublayer_backward(d_y, block_cache['ffn_branch']['sublayer_cache'], block_params['ffn'])
+    d_ffn_out, d_gamma_ffn, d_beta_ffn = layernorm_backward_affine(d_ln2, block_cache['ffn_branch']['ln_cache'])
+    d_ffn_out = d_y + d_ffn_out
+
+    # do the attn backward process
+    d_ln1, attn_grads = _attn_sublayer_backward(d_ffn_out, block_cache['attn_branch']['sublayer_cache'], block_params['attn'])
+    d_x, d_gamma_attn, d_beta_attn = layernorm_backward_affine(d_ln1, block_cache['attn_branch']['ln_cache'])
+    d_x = d_x + d_ffn_out
+
+    return d_x, {
+        'ln1': {'gamma': d_gamma_attn, 'beta': d_beta_attn},
+        'ln2': {'gamma': d_gamma_ffn, 'beta': d_beta_ffn},
+        'attn': attn_grads,
+        'ffn': ffn_grads
+    }
+
+    pass
 
 # Step 140 - stack_transformer_blocks (not yet solved)
 # TODO: implement
