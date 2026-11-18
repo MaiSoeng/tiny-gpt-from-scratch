@@ -1703,8 +1703,53 @@ def transformer_block_backward(d_y, cache, block_params):
 
     pass
 
-# Step 140 - stack_transformer_blocks (not yet solved)
-# TODO: implement
+# Step 140 - stack_transformer_blocks
+import numpy as np
+
+def stack_transformer_blocks(n_layers, d_model, n_heads, d_ff):
+    """Build a list of n_layers Transformer block parameter dicts.
+
+    Each block dict has keys 'ln1', 'attn', 'ln2', 'ffn'.
+    """
+    # TODO: create n_layers initialized block parameter dicts and return them as a list
+    params_stack = []
+    for _ in range(n_layers):
+        # initialize parameters (pre-attention LayerNorm)
+        params = {}
+        gamma1 = np.ones(d_model)
+        beta1 = np.zeros(d_model)
+
+        # attention layer
+        attn_dict = create_multihead_qkv_projections(d_model, scale=0.02)
+        Wo = create_multihead_output_projection(d_model, scale=0.02)
+        bo = np.zeros(d_model)
+        attn_dict['Wo'] = Wo
+        attn_dict['bo'] = bo
+
+        # pre-FFN LayerNorm
+        gamma2 = np.ones(d_model)
+        beta2 = np.zeros(d_model)
+
+        # FFN layer
+        W1_ori = make_2d_random(d_model, d_ff, 0)
+        W1 = scale_w_small(W1_ori, scale=0.02)
+        W2_ori = make_2d_random(d_ff, d_model, 0)
+        W2 = scale_w_small(W2_ori, scale=0.02)
+        b1 = np.zeros(d_ff)
+        b2 = np.zeros(d_model)
+
+        params['ln1'] = {'gamma': gamma1, 'beta': beta1}
+        params['ln2'] = {'gamma': gamma2, 'beta': beta2}
+        params['attn'] = attn_dict
+        params['ffn'] = {'W1': W1, 'W2': W2, 'b1': b1, 'b2': b2}
+        params_stack.append(params)
+
+    return params_stack
+
+
+
+        
+    pass
 
 # Step 141 - forward_through_all_blocks (not yet solved)
 # TODO: implement
