@@ -1812,8 +1812,19 @@ def final_layernorm_forward(x, gamma, beta):
     return y, layernorm_cache['cache']
     pass
 
-# Step 144 - lm_head_linear_forward (not yet solved)
-# TODO: implement
+# Step 144 - lm_head_linear_forward
+def lm_head_linear_forward(x, w_lm, b_lm):
+    """Project hidden states (B,T,d_model) to logits (B,T,vocab_size)."""
+    # TODO: project final hidden states to vocab-size logits via the language model head.
+    x_flat = x.reshape(-1, x.shape[-1])
+    linear_cache = linear_forward(x_flat, w_lm)
+    bias_cache = bias_add_forward(linear_cache['y'], b_lm)
+    
+    # reshape
+    y = bias_cache['y'].reshape(x.shape[0], x.shape[1], w_lm.shape[-1])
+    return {'logits': y, 
+    'cache': {'w_lm': w_lm, 'x': x}}
+    pass
 
 # Step 145 - full_model_forward (not yet solved)
 # TODO: implement
