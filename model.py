@@ -1787,7 +1787,7 @@ def backward_through_all_blocks(d_y, caches, blocks):
     
     grads_list.reverse()
     
-    return dx, grads_list
+    return d_y, grads_list
 
     pass
 
@@ -1856,8 +1856,57 @@ def full_model_forward(x_ids, model_params):
     return logits, caches
     pass
 
-# Step 146 - full_model_backward (not yet solved)
-# TODO: implement
+# Step 146 - full_model_backward
+def full_model_backward(d_logits, caches, model_params):
+    """Propagate d_logits back through LM head, final LN, blocks, and embeddings.
+
+    Args:
+        d_logits: (B, T, V) gradient w.r.t. the model output
+        caches: nested dict from full_model_forward with keys
+                'emb', 'blocks', 'ln_f', 'lm_head'
+        model_params: nested dict matching the forward's parameter tree
+
+    Returns:
+        grads: nested dict mirroring model_params with keys
+               'tok_emb', 'pos_emb', 'blocks', 'ln_f': {'gamma', 'beta'},
+               'lm_head': {'w_lm', 'b_lm'}
+    """
+    # TODO: walk the forward chain in reverse, returning a grads tree shaped like model_params
+    # grads = {}
+    # calculate dw_lm, db and dz
+    x = caches['lm_head']['x']
+    dw_lm = np.einsum("btd,btv -> dv", x, d_logits)
+    db_lm = np.sum(d_logits, axis = (0, 1))
+    dz = d_logits @ caches['lm_head']['w_lm'].T
+
+    # LN layer
+    caches['ln_f']['eps'] = 1e-5
+    dz_flat = dz.reshape(-1, dz.shape[-1])
+    caches['ln_f']['x_hat'] = caches['ln_f']['x_hat'].reshape(dz_flat.shape)
+    layernorm_dict = layernorm_backward_full(dz_flat, caches['ln_f'])
+
+    # Transformer backward layer
+    d_ln_flat = layernorm_dict['dx']
+    d_ln = d_ln_flat.reshape(dz.shape)
+    d_emb, grads_list = backward_through_all_blocks(d_ln, caches['blocks'], model_params['blocks'])
+
+    # split the embeddings
+    d_emb_dict = embedding_sum_backward(d_emb)
+    d_tok_emb = token_embedding_backward(d_emb_dict['d_token_emb'], caches['emb']['tok_cache'])
+    d_pos_emb = np.zeros_like(model_params['pos_emb'])
+    d_pos_emb[:caches['emb']['seq_len']] = d_emb_dict['d_pos_emb']
+
+    return {
+        'tok_emb': d_tok_emb,
+        'pos_emb': d_pos_emb,
+        'blocks': grads_list,
+        'ln_f': {'gamma': layernorm_dict['dgamma'], 'beta': layernorm_dict['dbeta']},
+        'lm_head': {'w_lm': dw_lm, 'b_lm': db_lm}
+    }
+
+
+
+    pass
 
 # Step 147 - initialize_adam_moments (not yet solved)
 # TODO: implement
