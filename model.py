@@ -1956,8 +1956,13 @@ def adam_update_first_moment(m, grad, beta1):
     return m_t
     pass
 
-# Step 151 - adam_update_second_moment (not yet solved)
-# TODO: implement
+# Step 151 - adam_update_second_moment
+def adam_update_second_moment(v_prev, grad, beta2):
+    """Update Adam's second-moment estimate v using squared gradient EMA."""
+    # TODO: blend v_prev with the squared gradient using beta2
+    v_t = elementwise_multiply(beta2, v_prev) + elementwise_multiply((1 - beta2), grad**2)
+    return v_t
+    pass
 
 # Step 152 - adam_bias_correction (not yet solved)
 # TODO: implement
