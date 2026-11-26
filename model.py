@@ -1946,8 +1946,15 @@ def adam_increment_step(t):
     return t + 1
     pass
 
-# Step 150 - adam_update_first_moment (not yet solved)
-# TODO: implement
+# Step 150 - adam_update_first_moment
+import numpy as np
+
+def adam_update_first_moment(m, grad, beta1):
+    """Return the updated Adam first-moment estimate."""
+    # TODO: blend previous moment m with current grad using decay beta1
+    m_t = elementwise_multiply(beta1, m) + elementwise_multiply((1 - beta1), grad)
+    return m_t
+    pass
 
 # Step 151 - adam_update_second_moment (not yet solved)
 # TODO: implement
